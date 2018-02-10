@@ -1,0 +1,49 @@
+
+#include <Arduino.h>
+
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
+
+#include <ESP8266HTTPClient.h>
+#include <ESP8266httpUpdate.h>
+
+#define USE_SERIAL Serial
+
+ESP8266WiFiMulti WiFiMulti;
+
+void setup() {
+
+    USE_SERIAL.begin(115200);
+    // USE_SERIAL.setDebugOutput(true);
+
+    USE_SERIAL.println();
+    USE_SERIAL.println();
+    USE_SERIAL.println();
+    USE_SERIAL.println(WiFi.macAddress());
+  USE_SERIAL.println(WiFi.softAPmacAddress());
+  USE_SERIAL.println(ESP.getFreeSketchSpace());
+  USE_SERIAL.println(ESP.getSketchSize());
+  USE_SERIAL.println(ESP.getFlashChipRealSize());
+  USE_SERIAL.println(ESP.getSdkVersion());
+
+    for(uint8_t t = 4; t > 0; t--) {
+        USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);
+        USE_SERIAL.flush();
+        delay(1000);
+    }
+
+    WiFiMulti.addAP("SSIDWifi", "1234567890");
+
+}
+
+void loop() {
+    // wait for WiFi connection
+    if((WiFiMulti.run() == WL_CONNECTED)) {
+        t_httpUpdate_return ret = ESPhttpUpdate.update("192.168.100.79",80,"/upload/test.ino.nodemcu.bin","httpupdate");
+        switch(ret) {
+            case HTTP_UPDATE_OK:
+                USE_SERIAL.println("HTTP_UPDATE_OK");
+                break;
+        }
+    }
+}

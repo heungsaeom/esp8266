@@ -1,0 +1,8 @@
+Button: IO16 (D0)
+Ds18b20: IO12 (D6)
+
+USB TTL - ESP8266 V12
+RTS  - RST
+DTR - IO0
+RX - RX (HC06)
+TX - TX (HC06)

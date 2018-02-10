@@ -1,0 +1,54 @@
+#include <WiFi.h> // thu vien cho ESP32 IOT VN
+//#include <ESP8266WiFi.h> //thu vien cho ESP8266 NodeMCU
+#include <WiFiUDP.h>
+#include <WiFiUdp.h>
+unsigned int UDPPort = 80;      
+const char* ssid = "WIFIT2";
+const char* pw = "hru12345680";
+char packetBuffer[255]; 
+char  replyBuffer[] = "hung";       
+IPAddress IPa(192,168,100,160);
+IPAddress gateway(192,168,100,3);
+IPAddress subnet(255,255,255,0);
+WiFiUDP Udp;
+
+void setup()
+{
+    Serial.begin(115200);
+    WiFi.begin(ssid,pw);
+    IPAddress ip = WiFi.localIP();
+    WiFi.config(IPa,gateway,subnet);
+    Serial.println(ip);
+
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: " + WiFi.localIP().toString());
+    Udp.begin(UDPPort);
+    Udp.beginPacket("192.168.100.41", UDPPort);
+    char ipBuffer[255];
+}
+void loop() {
+//Nhan du lieu tu server:
+  int packetSize = Udp.parsePacket();
+  if (packetSize) {
+    IPAddress remoteIp = Udp.remoteIP();
+    Serial.print(remoteIp);
+    Serial.print(":");
+    int len = Udp.read(packetBuffer, 255);
+    if (len > 0) {
+      packetBuffer[len] = 0;
+    }
+    Serial.println(packetBuffer); // du lieu nhan duoc tu server 
+ //   Udp.beginPacket(Udp.remoteIP(), Udp.remotePort()); //gui den IP da gui
+//    Udp.write(replyBuffer); // gui du lieu den server   
+  } 
+//Gui du lieu den server:
+    Udp.beginPacket("192.168.100.41", UDPPort);
+   Udp.printf(replyBuffer);
+   Udp.endPacket();
+   delay(1000);
+}

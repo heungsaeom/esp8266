@@ -1,0 +1,9 @@
+A1 - Thiet bi 1
+A2 - Thiet bi 2
+A3 - Thiet bi 3
+A4 - Thiet bi 4
+
+LCD (8,7,6,5,4,3)
+ Nap code: ESP8266- V12 : GPIO2 - 3.3V, GPIO15 - GND , GPIO0 - GND ( button ), 
+RX - TX(USB) , TX - RX(USB).
+Hoat dong: 

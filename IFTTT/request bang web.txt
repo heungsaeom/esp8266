@@ -1,0 +1,5 @@
+http://maker.ifttt.com/trigger/"eventname"/with/key/"APIkey"
+https://maker.ifttt.com/trigger/yourEvent/with/key/yourKey body: {"value1":"Phone Number","value2":"SMS Message"}
+http://maker.ifttt.com/trigger/test/with/key/YOURKEY?value1=... 
+vd:
+http://maker.ifttt.com/trigger/sms/with/key/lO7Xn5FNhydtrThLXakOscc7P40GF63CXE25Plznjdn

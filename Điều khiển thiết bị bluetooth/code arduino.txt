@@ -1,0 +1,53 @@
+int doc;
+void setup() {
+  // put your setup code here, to run once:
+
+pinMode(16,OUTPUT);
+pinMode(0,OUTPUT);
+pinMode(14,OUTPUT);
+pinMode(13,OUTPUT);
+Serial.begin(9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+if(Serial.available()>0)
+{
+  doc = Serial.read();
+} else {doc == '0';}
+Serial.println(doc);
+if(doc == '1')
+{
+  digitalWrite(16,HIGH);
+}
+else if(doc == '2')
+{
+  digitalWrite(16,LOW);
+}
+else if(doc == '3')
+{
+  digitalWrite(0,HIGH);
+}
+else if(doc == '4')
+{
+  digitalWrite(0,LOW);
+}
+else if(doc == '5')
+{
+  digitalWrite(14,HIGH);
+}
+else if(doc == '6')
+{
+  digitalWrite(14,LOW);
+}
+else if(doc == '7')
+{
+  digitalWrite(13,HIGH);
+}
+else if(doc == '8')
+{
+  digitalWrite(13,LOW);
+}
+
+delay(500);
+}

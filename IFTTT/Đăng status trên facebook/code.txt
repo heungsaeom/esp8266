@@ -1,0 +1,85 @@
+#include <ESP8266WiFi.h>
+
+/****** Ket noi wifi **********/
+const char ssid[] = "WIFIT2";
+const char password[] = "hru12345680";
+
+// IFTTT setup
+const char *host = "maker.ifttt.com";       
+const char *Maker_Event = "button_press";       //Ten ban dat trong IFTT
+const char *Your_Key = "lO7Xn5FNhydtrThLXakOscc7P40GF63CXE25Plznjdn";      //API key cua app
+     
+
+//------- Khai bao ham send_event ---------
+void send_event(const char *event);
+
+void setup() 
+{  
+  Serial.begin(115200);
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  /*********** Ket noi toi mang WiFi ***********/
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  while (WiFi.waitForConnectResult() != WL_CONNECTED) // Kiem tra ket noi
+  {
+    Serial.println("Khong the ket noi Wifi...");
+    delay(500);
+    ESP.restart();
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connection...");
+  Serial.print("IP = ");
+  Serial.println(WiFi.localIP());
+  
+}
+int a=1;
+
+void loop() 
+{
+  if(a==1){
+     send_event(Maker_Event);
+    a=a+1;
+  }
+ 
+ 
+}
+
+void send_event(const char *event)
+{
+  WiFiClient client;
+  if (!client.connect(host, 80)) 
+  {
+    Serial.println("Disconnection !!!");
+    return;
+  }
+  String url = "/trigger/";
+  url += event;
+  url += "/with/key/";
+  url += Your_Key; 
+  
+  // Gui request len server
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" + 
+               "Connection: close\r\n\r\n");
+
+  while(client.connected())
+  {
+    if(client.available())
+    {
+      String line = client.readStringUntil('\r');
+      Serial.print(line);
+    }
+    else 
+    {
+      delay(50);
+    };
+  }
+  
+  // Hoan thanh
+  client.stop();
+
+}

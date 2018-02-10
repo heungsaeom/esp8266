@@ -1,0 +1,29 @@
+#include <ESP8266WiFi.h>
+#include <FirebaseArduino.h>
+#define FIREBASE_HOST "test-ba51b.firebaseio.com" //Thay b?ng d?a ch? firebase c?a b?n
+#define FIREBASE_AUTH ""   //Không dùng xác th?c nên không d?i
+#define WIFI_SSID "Fernando Torres"   //Thay wifi và m?t kh?u
+#define WIFI_PASSWORD "thuhang90"
+
+void setup() {
+  Serial.begin(9600);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("connecting");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println();
+  Serial.print("connected: ");
+  Serial.println(WiFi.localIP());
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+  Firebase.set("led", 10000);
+}
+void loop() {
+  int i = 0;
+  for (i = 0; i < 10; i++) {
+    Firebase.set("led", i);
+    Serial.println(i);
+    delay(200);
+  }
+}

@@ -1,0 +1,106 @@
+#include <ESP8266WiFi.h>
+int ledPin = 2; // GPIO16
+
+const char* ssid = "Fernando Torres";// tên wifi mà b?n mu?n connect
+const char* password = "thuhang";//pass wifi
+WiFiServer server(80);// Port 80
+
+void setup() {
+  Serial.begin(115200);//for serial communication
+  delay(10);
+  
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+  
+  WiFi.begin(ssid, password);
+  delay(3000);
+  
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.println("Smart config");
+  //  WiFi.disconnect();//clear all current wifi data
+    WiFi.mode(WIFI_STA);//set station mode or smart config
+    delay(500);
+    WiFi.beginSmartConfig();//begin smart config
+  }
+
+  // B?t d?u sever
+  server.begin();
+  Serial.println("Server started");
+
+  // In d?a ch? IP
+  Serial.print("Use this URL to connect: ");
+  Serial.print("http://");
+  Serial.print(WiFi.localIP());
+  Serial.println("/");
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  WiFiClient client = server.available();
+  if (!client) {
+    return;
+  }
+
+  // Ð?c data
+  Serial.println("new client");
+  while (!client.available()) {
+    delay(1);
+  }
+
+  String request = client.readStringUntil('\r');
+  Serial.println(request);
+  client.flush();
+
+  int value = LOW;
+  if (request.indexOf("/LED=ON") != -1) {
+    digitalWrite(ledPin, HIGH);
+    value = HIGH;
+  }
+  if (request.indexOf("/LED=OFF") != -1) {
+    digitalWrite(ledPin, LOW);
+    value = LOW;
+  }
+
+  client.println("HTTP/1.1 200 OK");
+  client.println("Content-Type: text/html; charset=UTF-8");
+  client.println("");
+  client.println("<!DOCTYPE HTML>");
+  client.println("<link rel='icon' href='https://www.chelseafc.com/content/cfc/en/ref/clubs/en/chelsea.img.png'>");  //icon tieu de website
+  client.println("<html>");
+
+
+  client.println("<style>");
+  client.println(".khung{ align:center; width:100%; height:auto; border:1px solid black; text-align:center; background-color:lightgray ;  float:center} </style>");
+  client.println("<style>");
+  client.println(".khungmenu{ align:center; width:100px; height:auto; border:1px solid black; text-align:center; background-color:blue} </style>");
+
+
+
+  client.println("<title>Ði?u khi?n LED - Hùng elnino</title>");
+
+  client.println("<div class=khung>");
+  client.println("<img src='http://file.vforum.vn/hinh/2014/5/anh-bia-one-piece-5.jpg' width:1500px height:50px>");
+
+
+
+  client.println("<br>");
+  client.print("<h3>Tr?ng thái:</h3>");
+  if (value == HIGH) {
+    client.print("<h3 style='color:green;fontsize:20'>ON</h3>");
+  } else {
+    client.print("<h3 style='color:red;fontsize:20'>OFF</h3>");
+  }
+
+  client.println("<br>");
+  client.print("<p style='fontsize:20'><a href=\"/LED=ON\"><button> B?t Ðèn</button></a></p><p style='fontsize:20'><a href=\"/LED=OFF\"><button>T?t Ðèn</button></a></p>");
+  client.println("<iframe src='http://192.168.0.104:8080/browserfs.html' width='600px' height='500px' frameborder='1'></iframe>"); //dia chi web camera
+  client.println("</div>");
+
+  client.println("</html>");
+  delay(1);
+  Serial.println("Client disonnected");
+  Serial.println("");
+
+}

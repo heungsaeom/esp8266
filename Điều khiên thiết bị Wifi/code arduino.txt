@@ -1,0 +1,68 @@
+#include <ESP8266WiFi.h>
+const char* ssid = "Fernando Torres";// tên wifi mà b?n mu?n connect
+const char* password = "thuhang90";//pass wifi
+WiFiServer server(80);// Port 80
+int doc;
+void setup() {
+  // put your setup code here, to run once:
+
+pinMode(16,OUTPUT);
+pinMode(0,OUTPUT);
+pinMode(14,OUTPUT);
+pinMode(13,OUTPUT);
+Serial.begin(115200);
+WiFi.begin(ssid, password);
+server.begin();
+Serial.print(WiFi.localIP());
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+WiFiClient client = server.available();
+if (!client) {
+return;
+}
+while(!client.available()){
+delay(1);
+}
+
+String request = client.readStringUntil('\r');
+client.flush();
+
+if (request.indexOf("/LED1=ON") != -1) {
+digitalWrite(16, HIGH);
+}
+if (request.indexOf("/LED1=OFF") != -1) {
+digitalWrite(16, LOW);
+}
+if (request.indexOf("/LED2=ON") != -1) {
+digitalWrite(0, HIGH);
+}
+if (request.indexOf("/LED2=OFF") != -1) {
+digitalWrite(0, LOW);
+}
+if (request.indexOf("/LED3=ON") != -1) {
+digitalWrite(14, HIGH);
+}
+if (request.indexOf("/LED3=OFF") != -1) {
+digitalWrite(14, LOW);
+}
+if (request.indexOf("/LED4=ON") != -1) {
+digitalWrite(13, HIGH);
+}
+if (request.indexOf("/LED4=OFF") != -1) {
+digitalWrite(13, LOW);
+}
+client.println("HTTP/1.1 200 OK");
+client.println("Content-Type: text/html; charset=UTF-8");
+client.println(""); 
+client.println("<!DOCTYPE HTML>");
+client.println("<link rel='icon' href='https://www.chelseafc.com/content/cfc/en/ref/clubs/en/chelsea.img.png'>");  //icon tieu de website
+client.println("<html>");
+client.println("<p style='fontsize:20'><a href=\"/LED1=ON\"><button> B?t Ðèn 1</button></a></p><p style='fontsize:20'><a href=\"/LED1=OFF\"><button>T?t Ðèn 1</button></a></p>");
+client.println("<p style='fontsize:20'><a href=\"/LED2=ON\"><button> B?t Ðèn 2</button></a></p><p style='fontsize:20'><a href=\"/LED2=OFF\"><button>T?t Ðèn 2</button></a></p>");
+client.println("<p style='fontsize:20'><a href=\"/LED3=ON\"><button> B?t Ðèn 3</button></a></p><p style='fontsize:20'><a href=\"/LED3=OFF\"><button>T?t Ðèn 3</button></a></p>");
+client.println("<p style='fontsize:20'><a href=\"/LED4=ON\"><button> B?t Ðèn 4</button></a></p><p style='fontsize:20'><a href=\"/LED4=OFF\"><button>T?t Ðèn 4</button></a></p>");
+client.println("</html>");
+delay(100);
+}
