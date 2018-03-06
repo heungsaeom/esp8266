@@ -1,0 +1,24 @@
+#include <ESP8266WiFi.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>  
+// C?u hình.
+#define WIFI_SSID "Fernando Torres"
+#define WIFI_PASSWORD "thuhang90"
+
+void setup() {
+  Serial.begin(9600);
+  // Két n?i wifi.
+  WiFiManager wifiManager;
+  delay(100);
+  wifiManager.autoConnect("SmartElnino");
+  delay(100);
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+}
+
+int n = 0;
+
+void loop() {
+
+delay(500);
+}
