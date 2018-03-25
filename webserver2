@@ -1,0 +1,142 @@
+/////////////////////////////////
+// Generated with a lot of love//
+// with TUNIOT FOR ESP8266     //
+// Website: Easycoding.tn      //
+/////////////////////////////////
+#include <ESP8266WiFi.h>
+
+String  ClientRequest;
+WiFiServer server(80);
+
+void setup()
+{
+  ClientRequest = "";
+
+Serial.begin(9600);
+pinMode(D5, OUTPUT);
+pinMode(D6, OUTPUT);
+pinMode(D7, OUTPUT);
+pinMode(D8, OUTPUT);
+  WiFi.disconnect();
+  delay(3000);
+  Serial.println("START");
+   WiFi.begin("TP-LINK_9FA2","12063338");
+  while ((!(WiFi.status() == WL_CONNECTED))){
+    delay(300);
+    Serial.print("..");
+
+  }
+  Serial.println("Connected");
+  Serial.println("Your IP is");
+  Serial.println((WiFi.localIP().toString()));
+  server.begin();
+
+}
+
+
+void loop()
+{
+
+    WiFiClient client = server.available();
+    if (!client) { return; }
+    while(!client.available()){  delay(1); }
+    ClientRequest = (client.readStringUntil('\r'));
+    client.flush();
+    if (ClientRequest.indexOf("1ON") > 0) {
+      digitalWrite(D5,HIGH);
+
+    }
+    if (ClientRequest.indexOf("1OFF") > 0) {
+      digitalWrite(D5,LOW);
+
+    }
+    if (ClientRequest.indexOf("2ON") > 0) {
+      digitalWrite(D6,HIGH);
+
+    }
+    if (ClientRequest.indexOf("2OFF") > 0) {
+      digitalWrite(D6,LOW);
+
+    }
+    if (ClientRequest.indexOf("3ON") > 0) {
+      digitalWrite(D7,HIGH);
+
+    }
+    if (ClientRequest.indexOf("3OFF") > 0) {
+      digitalWrite(D7,LOW);
+
+    }
+    if (ClientRequest.indexOf("4ON") > 0) {
+      digitalWrite(D8,HIGH);
+
+    }
+    if (ClientRequest.indexOf("4OFF") > 0) {
+      digitalWrite(D8,LOW);
+
+    }
+    client.println("HTTP/1.1 200 OK");
+    client.println("Content-Type: text/html");
+    client.println("");
+    client.println("<!DOCTYPE HTML>");
+    client.println("<html>");
+    client.println("<head>");
+    client.println("</head>");
+    client.println("<body>");
+      client.println("<h1 style=""color:#ff0000"">");
+      client.println("Thiet bi 1");
+      client.println("</h1>");
+      client.println("<a href=");
+      client.println("1ON");
+      client.println("><button>");
+      client.println("ON");
+      client.println("</button></a>");
+      client.println("<a href=");
+      client.println("1OFF");
+      client.println("><button>");
+      client.println("OFF");
+      client.println("</button></a>");
+      client.println("<h1 style=""color:#ff0000"">");
+      client.println("Thiet bi 2");
+      client.println("</h1>");
+      client.println("<a href=");
+      client.println("2ON");
+      client.println("><button>");
+      client.println("ON");
+      client.println("</button></a>");
+      client.println("<a href=");
+      client.println("2OFF");
+      client.println("><button>");
+      client.println("OFF");
+      client.println("</button></a>");
+      client.println("<h1 style=""color:#ff0000"">");
+      client.println("Thiet bi 3");
+      client.println("</h1>");
+      client.println("<a href=");
+      client.println("3ON");
+      client.println("><button>");
+      client.println("ON");
+      client.println("</button></a>");
+      client.println("<a href=");
+      client.println("3OFF");
+      client.println("><button>");
+      client.println("OFF");
+      client.println("</button></a>");
+      client.println("<h1 style=""color:#ff0000"">");
+      client.println("Thiet bi 4");
+      client.println("</h1>");
+      client.println("<a href=");
+      client.println("4ON");
+      client.println("><button>");
+      client.println("ON");
+      client.println("</button></a>");
+      client.println("<a href=");
+      client.println("4OFF");
+      client.println("><button>");
+      client.println("OFF");
+      client.println("</button></a>");
+    client.println("</body>");
+    client.println("</html>");
+    client.stop();
+     delay(1);
+
+}
